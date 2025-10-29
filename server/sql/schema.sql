@@ -1,0 +1,41 @@
+-- MySQL schema for ShoeCart
+
+CREATE TABLE IF NOT EXISTS users (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  email VARCHAR(255) NOT NULL UNIQUE,
+  password_hash VARCHAR(255) NOT NULL,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS products (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  handle VARCHAR(255) NOT NULL UNIQUE,
+  category VARCHAR(50),
+  brand VARCHAR(100),
+  price DECIMAL(10,2) NOT NULL,
+  discount INT DEFAULT 0,
+  size_options TEXT,
+  image VARCHAR(1000),
+  description TEXT,
+  stock INT DEFAULT 0
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  product_id INT NOT NULL,
+  size VARCHAR(20),
+  order_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+  status VARCHAR(50) DEFAULT 'Processing',
+  receipt_id VARCHAR(100),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+);
+
+CREATE TABLE IF NOT EXISTS wishlist (
+  user_id INT NOT NULL,
+  product_id INT NOT NULL,
+  PRIMARY KEY (user_id, product_id),
+  FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+);
